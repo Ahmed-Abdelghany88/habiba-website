@@ -1,90 +1,119 @@
-import React, { useState, useEffect } from 'react';
-import './Footer.css'; 
+import React, { useState } from "react";
+import "./Footer.css";
 import logo2 from "../../assets/images/logo2.png";
+import useForm from "../../hooks/useForm"; // <-- your hook
+import validate from "../../hooks/validate"; // <-- validation logic
 
 const Footer = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: ""
-  });
-
   const [status, setStatus] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // callback when form is valid
+  const sendMail = async () => {
     setStatus("Sending...");
-    setShowPopup(true);
 
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(values),
       });
 
       const data = await res.json();
 
       if (data.success) {
         setStatus("✅ Message sent successfully!");
-        setFormData({ name: "", email: "", phone: "", message: "" });
+        setTimeout(() => setStatus(""), 3000);
+        values.name = "";
+        values.email = "";
+        values.phone = "";
+        values.message = "";
       } else {
         setStatus("❌ Failed: " + data.message);
+        setTimeout(() => setStatus(""), 3000);
       }
     } catch (err) {
       setStatus("❌ Error: " + err.message);
+      setTimeout(() => setStatus(""), 3000);
     }
-
-    setShowPopup(true);
   };
 
-  // Hide popup after 3 seconds
-  useEffect(() => {
-    if (showPopup) {
-      const timer = setTimeout(() => {
-        setShowPopup(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showPopup]);
+  const { values, errors, handleChange, handleSubmit } = useForm(sendMail, validate);
 
   return (
     <div className="footer">
-      <div className='footer-container'>
-        <div className='logo-container'>
+      <div className="footer-container">
+        <div className="logo-container">
           <img className="footer-logo" src={logo2} alt="MyBrand" />
-          <p style={{ color: '#fff', padding: '10px 0', margin: 0 }}>Your WhatsApp number</p>
-          <p style={{ color: '#fff', padding: '10px 0', margin: 0 }}>Your phone number</p>
+          <p style={{ color: "#fff", padding: "10px 0", margin: 0 }}>
+            Your WhatsApp number
+          </p>
+          <p style={{ color: "#fff", padding: "10px 0", margin: 0 }}>
+            Your phone number
+          </p>
         </div>
 
         <div className="footer-mailform">
-          <form className="mail-form" onSubmit={handleSubmit}>
+          <form className="mail-form" onSubmit={handleSubmit} noValidate>
             <h3>Contact Us:</h3>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter a valid email" required />
-            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Your Name" required />
-            <input type="text" name="phone" value={formData.phone} onChange={handleChange} placeholder="Your Phone" required />
-            <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Your Message" required />
-            <button type="submit">Send</button>
+
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              value={values.email}
+              onChange={handleChange}
+              placeholder="Enter a valid email"
+              required
+            />
+            {errors.email && <p className="error">{errors.email}</p>}
+
+            <label>Name:</label>
+            <input
+              type="text"
+              name="name"
+              value={values.name}
+              onChange={handleChange}
+              placeholder="Your Name"
+              required
+            />
+            {errors.name && <p className="error">{errors.name}</p>}
+
+            <label>Phone:</label>
+            <input
+              type="text"
+              name="phone"
+              value={values.phone}
+              onChange={handleChange}
+              placeholder="Your Phone"
+              required
+            />
+            {errors.phone && <p className="error">{errors.phone}</p>}
+
+            <label>Message:</label>
+            <textarea
+              name="message"
+              value={values.message}
+              onChange={handleChange}
+              placeholder="Your Message"
+              required
+              style={{ height: "100px" }}
+            />
+            {errors.message && <p className="error">{errors.message}</p>}
+
+            <button className="send-button" type="submit">Send</button>
           </form>
+
+          {status && (
+            <div className="popup-status">
+              <p>{status}</p>
+            </div>
+          )}
         </div>
       </div>
 
       <div className="footer-info">
         <p>&copy; 2025 Habiba-Bahaa. All rights reserved.</p>
       </div>
-
-      {/* Popup Notification */}
-      {showPopup && (
-        <div className="popup-status">
-          {status}
-        </div>
-      )}
     </div>
   );
 };

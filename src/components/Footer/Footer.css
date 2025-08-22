@@ -49,6 +49,18 @@ input{
   padding: 20px 0 10px 0 ;
 }
 
+.send-button{
+  margin-top: 15px;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 12px;
+  margin-top: -3px;
+  margin-bottom: 10px;
+  display: block;
+}
+
 .popup-status {
   position: fixed;
   bottom: 30px;
@@ -61,6 +73,7 @@ input{
   z-index: 1000;
   font-size: 14px;
   animation: fadeInOut 3s forwards;
+  right:  25%;
 }
 
 @keyframes fadeInOut {
