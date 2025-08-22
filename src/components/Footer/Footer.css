@@ -49,6 +49,28 @@ input{
   padding: 20px 0 10px 0 ;
 }
 
+.popup-status {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #222;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1000;
+  font-size: 14px;
+  animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(20px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(20px); }
+}
+
+
 /* Mobile view */
 @media (max-width: 768px){
 
@@ -78,3 +100,4 @@ input{
     justify-content: center;
 }
 }
+

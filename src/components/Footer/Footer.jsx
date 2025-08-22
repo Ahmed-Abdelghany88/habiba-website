@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Footer.css'; 
 import logo2 from "../../assets/images/logo2.png";
 
@@ -11,6 +11,7 @@ const Footer = () => {
   });
 
   const [status, setStatus] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,6 +20,7 @@ const Footer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("Sending...");
+    setShowPopup(true);
 
     try {
       const res = await fetch("/api/contact", {
@@ -38,7 +40,19 @@ const Footer = () => {
     } catch (err) {
       setStatus("❌ Error: " + err.message);
     }
+
+    setShowPopup(true);
   };
+
+  // Hide popup after 3 seconds
+  useEffect(() => {
+    if (showPopup) {
+      const timer = setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showPopup]);
 
   return (
     <div className="footer">
@@ -58,12 +72,19 @@ const Footer = () => {
             <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Your Message" required />
             <button type="submit">Send</button>
           </form>
-          {status && <p style={{ color: "white" }}>{status}</p>}
         </div>
       </div>
+
       <div className="footer-info">
         <p>&copy; 2025 Habiba-Bahaa. All rights reserved.</p>
       </div>
+
+      {/* Popup Notification */}
+      {showPopup && (
+        <div className="popup-status">
+          {status}
+        </div>
+      )}
     </div>
   );
 };
