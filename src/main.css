@@ -1,0 +1,9 @@
+:root {
+  --main-yellow-color: #e2bd6e;
+  --main-blue-color: #0f405f;
+  background-color: var(--main-yellow-color);
+}
+
+p{
+  font-size: 20px;
+}
