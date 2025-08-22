@@ -25,7 +25,7 @@ export default async function handler(req, res) {
           ${message.replace(/\n/g, '<br>')}
         </div>
       </div>
-      <p style="margin-top:30px; font-size:12px; color:#666;">This message was sent via your website’s contact form.</p>
+      <p style="margin-top:30px; font-size:12px; color:#666;">This message was sent via your website’s contact form. </p>
     </div>
   `,
     });

@@ -70,7 +70,6 @@ input{
   100% { opacity: 0; transform: translateY(20px); }
 }
 
-
 /* Mobile view */
 @media (max-width: 768px){
 
